@@ -115,18 +115,6 @@ const Navbar = props => {
                     Statistics
                   </Link>
                 </li>
-                <li className="nav-item dropdown">
-                  <Link
-                    className="nav-link dropdown-toggle arrow-none"
-                    // onClick={e => {
-                    //   e.preventDefault()
-                    //   setdashboard(!dashboard)
-                    // }}
-                    to="/about"
-                  >
-                    About
-                  </Link>
-                </li>
               </ul>
             </Collapse>
           </nav>

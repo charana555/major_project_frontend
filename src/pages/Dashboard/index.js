@@ -10,6 +10,11 @@ import {
 } from "reactstrap"
 import Dropzone from "react-dropzone"
 
+import { getPredictionFunction } from "api/prediction"
+
+import { jsPDF } from "jspdf"
+// import "jspdf-autotable"
+
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 
@@ -21,6 +26,21 @@ const Dashboard = () => {
   document.title = "Dashboard | Geeks - Lung Cancer Detection"
 
   const [selectedFiles, setselectedFiles] = useState([])
+  const [pdfContent, setPdfContent] = useState("")
+
+  const generatePdf = async () => {
+    const data = new FormData()
+    data.append("image", selectedFiles[0])
+
+    const result = await getPredictionFunction(data)
+
+    console.log(result)
+    // const doc = new jsPDF()
+    // doc.text("Lung Cancer Report", 10, 10)
+    // // Add more content as needed
+    // const pdfData = doc.output()
+    // setPdfContent(pdfData)
+  }
 
   function handleAcceptedFiles(files) {
     files.map(file =>
@@ -117,7 +137,11 @@ const Dashboard = () => {
                   </Form>
 
                   <div className="text-center mt-4">
-                    <button type="button" className="btn btn-primary ">
+                    <button
+                      onClick={generatePdf}
+                      type="button"
+                      className="btn btn-primary "
+                    >
                       Analyze and Generate Report
                     </button>
                   </div>
@@ -125,6 +149,17 @@ const Dashboard = () => {
               </Card>
             </Col>
           </Row>
+          {pdfContent && (
+            <div>
+              <iframe
+                src={`data:application/pdf;base64,${btoa(pdfContent)}`}
+                name="Report"
+                width="100%"
+                height="800px"
+              ></iframe>
+              {/* <button onClick={downloadPdf}>Download PDF</button> */}
+            </div>
+          )}
         </Container>
       </div>
     </React.Fragment>
