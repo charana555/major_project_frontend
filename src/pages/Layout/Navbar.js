@@ -91,7 +91,7 @@ const Navbar = props => {
                     Dashboard
                   </Link>
                 </li>
-                <li className="nav-item dropdown">
+                {/* <li className="nav-item dropdown">
                   <Link
                     className="nav-link dropdown-toggle arrow-none"
                     // onClick={e => {
@@ -114,7 +114,7 @@ const Navbar = props => {
                   >
                     Statistics
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </Collapse>
           </nav>

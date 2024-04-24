@@ -10,6 +10,8 @@ import {
 } from "reactstrap"
 import Dropzone from "react-dropzone"
 
+import Barchart from "./Barchart"
+
 import { getPredictionFunction } from "api/prediction"
 
 import { jsPDF } from "jspdf"
@@ -28,13 +30,26 @@ const Dashboard = () => {
   const [selectedFiles, setselectedFiles] = useState([])
   const [pdfContent, setPdfContent] = useState("")
 
+  const [predictedResult, setPredictedResult] = useState({})
+
   const generatePdf = async () => {
     const data = new FormData()
     data.append("image", selectedFiles[0])
 
     const result = await getPredictionFunction(data)
 
-    console.log(result)
+    console.log(result.data)
+    console.log(result.status)
+
+    let prediction_obj = {}
+    if (result.status === 200) {
+      prediction_obj["Adenocarcinoma"] = result.data.prediction[0]
+      prediction_obj["Large Cell Carcinoma"] = result.data.prediction[1]
+      prediction_obj["Normal"] = result.data.prediction[2]
+      prediction_obj["Squamous Cell Carcinoma"] = result.data.prediction[3]
+    }
+
+    setPredictedResult(prediction_obj)
     // const doc = new jsPDF()
     // doc.text("Lung Cancer Report", 10, 10)
     // // Add more content as needed
@@ -160,6 +175,23 @@ const Dashboard = () => {
               {/* <button onClick={downloadPdf}>Download PDF</button> */}
             </div>
           )}
+
+          <Row>
+            <Col>
+              <Card>
+                <CardBody>
+                  <CardSubtitle className="mb-4 fs-2 fw-bold">
+                    Predicted Results
+                  </CardSubtitle>
+                  {Object.values(predictedResult).length > 0 && (
+                    <Row>
+                      <Barchart data={Object.values(predictedResult)} />
+                    </Row>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </Container>
       </div>
     </React.Fragment>
